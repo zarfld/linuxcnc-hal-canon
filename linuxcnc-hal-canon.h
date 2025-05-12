@@ -227,9 +227,27 @@ int hal_register_adcout_func(const char *prefix, int index,
 
 /** @} */ // end of hal_analog
 
-// ----------------------
-// Encoder (encoder)
-// ----------------------
+/**
+ * @brief Canonical encoder interface structure for HAL.
+ * @ingroup hal_encoder
+ *
+ * This struct represents a single encoder channel based on the Canonical Device Interface (CDI).
+ * It provides count, position, and velocity outputs as well as index handling and scale configuration.
+ *
+ * ### Pins
+ * - `count` (HAL_OUT, s32): Raw encoder count
+ * - `position` (HAL_OUT, float): Scaled position value
+ * - `velocity` (HAL_OUT, float): Estimated velocity in position units per second
+ * - `reset` (HAL_IO, bit): Set to TRUE to reset the count
+ * - `index-enable` (HAL_IO, bit): Bidirectional pin for index-based reset handshake
+ *
+ * ### Parameters
+ * - `scale` (float): Counts-to-position scale factor
+ * - `max_index_vel` (float): Max velocity (pos-units/sec) for valid index reset (+/- 1 count)
+ * - `velocity_resolution` (float): Resolution of `velocity` output (pos-units/sec)
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:encoder
+ */
 typedef struct {
     hal_s32_t    *count;               // Pin: raw encoder count
     hal_float_t  *position;            // Pin: scaled position
@@ -239,14 +257,49 @@ typedef struct {
     hal_float_t  scale;               // Parameter: counts per position unit
     hal_float_t  max_index_vel;       // optional Parameter: max velocity for index reset
     hal_float_t  velocity_resolution; // optional Parameter: quantization step of velocity
-#ifdef RTAPI
-    int (*read)(void *self);           // optional Function: Capture counts, update position and velocity
-#endif
-    void *user_data;                   // for hardware context or state
 } hal_encoder_t;
 
+/**
+ * @brief Export HAL pins and parameters for a canonical encoder channel.
+ * @ingroup hal_encoder
+ *
+ * Creates all HAL pins and parameters as defined by the Canonical Device Interface (CDI)
+ * for encoder devices. The pin names follow the format:
+ * `<prefix>.encoder.<index>.<field>`
+ *
+ * @param enc       Pointer to the encoder struct to populate.
+ * @param prefix    Canonical name prefix, e.g. "enc.0" or "hw.1".
+ * @param index     Channel number (0-based) within the device.
+ * @param comp_id   HAL component ID from `hal_init()`.
+ *
+ * @return 0 on success, or a negative HAL/RTAPI error code on failure.
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:encoder
+ */
+
 
 #ifdef RTAPI
+/**
+ * @brief Register periodic read function for a canonical encoder channel.
+ * @ingroup hal_encoder
+ *
+ * Registers a HAL function named `<prefix>.encoder.<index>.read` that is expected to:
+ * - Capture the hardware encoder count
+ * - Update the canonical `count`, `position`, and `velocity` pins
+ *
+ * The registered function will be called cyclically from the HAL thread context and must match the signature:
+ * `void read_func(void *inst, long period_nsec);`
+ *
+ * @param prefix      Canonical name prefix (e.g. "enc.0")
+ * @param index       Channel number (0-based)
+ * @param read_func   Function pointer to the implementation
+ * @param inst        Context pointer (typically a pointer to `hal_encoder_t`)
+ * @param comp_id     HAL component ID returned by `hal_init()`
+ *
+ * @return 0 on success, or a negative error code on failure.
+ *
+ * @note Floating-point math is enabled (`uses_fp = 1`).
+ */
 
 #endif
 
