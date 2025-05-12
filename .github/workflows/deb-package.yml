@@ -31,14 +31,12 @@ jobs:
           cp copy-helpers.sh "$PKGROOT/usr/share/hal_canon/"
           cp hal_canon.pc "$PKGROOT/usr/lib/pkgconfig/"
 
-          cat <<EOF > "$PKGROOT/DEBIAN/control"
-Package: hal-canon
-Version: $VERSION
-Architecture: all
-Maintainer: hal-canon Project <maintainer@example.com>
-Description: Canonical Device Interface helper library for LinuxCNC HAL components
-Depends:
-EOF
+          echo "Package: hal-canon"              > "$PKGROOT/DEBIAN/control"
+          echo "Version: $VERSION"              >> "$PKGROOT/DEBIAN/control"
+          echo "Architecture: all"              >> "$PKGROOT/DEBIAN/control"
+          echo "Maintainer: hal-canon <dev@null>" >> "$PKGROOT/DEBIAN/control"
+          echo "Description: Canonical Device Interface helper library for LinuxCNC HAL components" >> "$PKGROOT/DEBIAN/control"
+          echo "Depends:"                       >> "$PKGROOT/DEBIAN/control"
 
           dpkg-deb --build "$PKGROOT"
 
