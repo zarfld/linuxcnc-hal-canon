@@ -15,7 +15,9 @@ extern "C" {
 typedef struct {
     hal_bit_t *in;       // Pin: state of hardware input
     hal_bit_t *in_not;   // Pin: inverted state of input
+#ifdef RTAPI
     int (*read)(void *self); // optional function: to update in/in_not from hardware
+#endif
     void *user_data;
 } hal_digin_t;
 
@@ -25,7 +27,7 @@ typedef struct {
 typedef struct {
     hal_bit_t *out;       // value to be written
     hal_bit_t invert;    // Parameter: if TRUE, out is inverted before hardware write
-#ifdef RTAPI#ifdef RTAPI
+#ifdef RTAPI
     int (*write)(void *self); // optional function: to write out/invert to hardware
 #endif
     void *user_data;
