@@ -72,4 +72,33 @@ In your HAL component:
 hal_digin_t button;
 hal_export_digin(&button, "gpio.0", 0, comp_id);
 hal_register_digin_func("gpio.0", 0, my_read_function, &button, comp_id);
+```
 
+Each interface provides:
+
+* An `export` function to define HAL pins/params
+* An optional `register` function to link logic
+
+---
+
+## 📁 File Structure
+
+```
+hal_canon.h       - Unified header with all declarations
+hal_digital.c     - Digital input/output implementations
+hal_analog.c      - Analog input/output implementations
+hal_encoder.c     - Encoder interface implementation
+```
+
+---
+
+## 📚 References
+
+* [LinuxCNC HAL Manual](https://linuxcnc.org/docs/html/hal/)
+* [Canonical Device Interfaces](https://linuxcnc.org/docs/html/hal/canonical-devices.html)
+
+---
+
+## 🔧 License
+
+MIT License – free to use, modify and integrate into your LinuxCNC components.
