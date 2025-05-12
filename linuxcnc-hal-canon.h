@@ -45,10 +45,11 @@ int hal_export_digin(hal_digin_t *digin, const char *prefix, int index, int comp
 /**
  * @brief Register canonical digin read function.
  */
+#ifdef RTAPI
 int hal_register_digin_func(const char *prefix, int index,
                             void (*read_func)(void *, long),
                             void *inst, int comp_id);
-
+#endif
 
 
 /**
@@ -83,9 +84,11 @@ int hal_export_digout(hal_digout_t *digout, const char *prefix, int index, int c
 /**
  * @brief Register canonical digout write function.
  */
+#ifdef RTAPI
 int hal_register_digout_func(const char *prefix, int index,
                              void (*write_func)(void *, long),
                              void *inst, int comp_id);
+#endif
 
 /** @} */ // end of hal_digital
 
@@ -98,10 +101,6 @@ typedef struct {
     hal_float_t offset;     // Parameter: subtraction after scaling
     hal_float_t bit_weight; // Parameter: value of one LSB
     hal_float_t hw_offset;  // Parameter: value present when 0V applied
-#ifdef RTAPI
-    int (*read)(void *self); // optional function: read function
-#endif
-    void *user_data;
 } hal_adcin_t;
 
 // ----------------------
@@ -116,10 +115,6 @@ typedef struct {
     hal_float_t low_limit;  // Parameter: optional lower clamp
     hal_float_t bit_weight; // Parameter: LSB value
     hal_float_t hw_offset;  // Parameter: physical output when 0 written
-#ifdef RTAPI
-    int (*write)(void *self); // optional Function: write function
-#endif
-    void *user_data;
 } hal_adcout_t;
 
 // ----------------------
