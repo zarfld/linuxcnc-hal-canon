@@ -1,3 +1,27 @@
+/**
+ * @file hal_canon.h
+ * @brief Canonical Device Interface definitions and export helpers for LinuxCNC HAL.
+ *
+ * This header provides data structures and function declarations for implementing
+ * canonical HAL interfaces for digital I/O, analog I/O, and encoders as defined by
+ * the LinuxCNC Canonical Device Interface (CDI) specification.
+ *
+ * It includes:
+ * - Struct definitions for each canonical device type (digin, digout, adcin, adcout, encoder)
+ * - Export functions to define HAL pins and parameters
+ * - Registration functions to link periodic HAL functions (read/write)
+ *
+ * Each canonical device follows a consistent naming convention:
+ * `<prefix>.<interface>.<index>.<pin|parameter|function>`
+ *
+ * This header is intended to be included in HAL component C files that
+ * implement device-specific logic and want to expose a CDI-compliant interface.
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html
+ *
+ * @author zarfld
+ */
+
 #ifndef LINUXCNC_HAL_CANON_H
 #define LINUXCNC_HAL_CANON_H
 
