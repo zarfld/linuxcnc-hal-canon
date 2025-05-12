@@ -9,29 +9,85 @@
 extern "C" {
 #endif
 
-// ----------------------
-// Digital Input (digin)
-// ----------------------
+/**
+ * @defgroup hal_digital Canonical Digital I/O
+ * @brief Export and registration helpers for canonical digital input/output.
+ * @{
+ */
+
+/**
+ * @defgroup hal_digin Canonical Digital Input
+ * @brief Canonical HAL interface for binary hardware inputs.
+ *
+ * The canonical digital input (`digin`) provides a standardized interface
+ * for reading binary values from hardware. Drivers implementing this interface
+ * must provide the following pins:
+ *
+ * - `in` (BIT):  state of the hardware input
+ * - `in-not` (BIT): inverse of the input state
+ *
+ * No HAL parameters are defined.
+ *
+ * The optional `read` function should update both pins from hardware input.
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#_digital_input
+ */
 typedef struct {
     hal_bit_t *in;       // Pin: state of hardware input
     hal_bit_t *in_not;   // Pin: inverted state of input
-#ifdef RTAPI
-    int (*read)(void *self); // optional function: to update in/in_not from hardware
-#endif
-    void *user_data;
 } hal_digin_t;
 
-// ----------------------
-// Digital Output (digout)
-// ----------------------
+/**
+ * @brief Export canonical digin pins & parameter.
+ */
+int hal_export_digin(hal_digin_t *digin, const char *prefix, int index, int comp_id);
+
+/**
+ * @brief Register canonical digin read function.
+ */
+int hal_register_digin_func(const char *prefix, int index,
+                            void (*read_func)(void *, long),
+                            void *inst, int comp_id);
+
+
+
+/**
+ * @brief Canonical digital output interface struct.
+ * @ingroup hal_digital
+ *
+ * This structure represents a single canonical digital output channel
+ * as defined in the LinuxCNC HAL canonical device interface specification.
+ *
+ * ### Pins
+ * - `out` (BIT, HAL_OUT): The output value to be written to hardware.
+ *
+ * ### Parameters
+ * - `invert` (BIT, HAL_RW): If TRUE, the `out` value is inverted before being sent to hardware.
+ *
+ * ### Behavior
+ * The optional `write` function (registered via `hal_register_digout_func`) should read the
+ * `out` and `invert` fields and apply the resulting value to the real hardware.
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#_digital_output
+ */
 typedef struct {
     hal_bit_t *out;       // value to be written
     hal_bit_t invert;    // Parameter: if TRUE, out is inverted before hardware write
-#ifdef RTAPI
-    int (*write)(void *self); // optional function: to write out/invert to hardware
-#endif
-    void *user_data;
 } hal_digout_t;
+
+/**
+ * @brief Export canonical digout pins and parameters.
+ */
+int hal_export_digout(hal_digout_t *digout, const char *prefix, int index, int comp_id);
+
+/**
+ * @brief Register canonical digout write function.
+ */
+int hal_register_digout_func(const char *prefix, int index,
+                             void (*write_func)(void *, long),
+                             void *inst, int comp_id);
+
+/** @} */ // end of hal_digital
 
 // ----------------------
 // Analog Input (adcin)
@@ -83,6 +139,11 @@ typedef struct {
 #endif
     void *user_data;                   // for hardware context or state
 } hal_encoder_t;
+
+
+#ifdef RTAPI
+
+#endif
 
 #ifdef __cplusplus
 }
