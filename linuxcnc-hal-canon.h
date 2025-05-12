@@ -123,9 +123,34 @@ int hal_register_digout_func(const char *prefix, int index,
  */
 
 
-// ----------------------
-// Analog Input (adcin)
-// ----------------------
+/**
+ * @brief Canonical analog input (adcin) structure for HAL.
+ * @ingroup hal_analog
+ *
+ * This struct represents a single analog input channel according to the
+ * Canonical Device Interface (CDI) specification in LinuxCNC.
+ *
+ * It provides a scaled and offset floating-point representation of a hardware
+ * analog input value, suitable for integration via ADC or other converters.
+ *
+ * ### Pin
+ * - `value` (HAL_OUT, float): Scaled result of the hardware input
+ *
+ * ### Parameters
+ * - `scale` (float): Multiplier applied to the raw input
+ * - `offset` (float): Value subtracted after scaling
+ * - `bit_weight` (float): Resolution of one LSB (least significant bit)
+ * - `hw_offset` (float): Voltage or current present when 0V is applied
+ *
+ * The canonical read function should acquire the raw hardware input and
+ * apply the following formula:
+ *
+ * ```
+ * value = (input * scale) - offset
+ * ```
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:analog-in
+ */
 typedef struct {
     hal_float_t *value;      // Pin: scaled and offset analog value
     hal_float_t scale;      // Parameter: multiplier
@@ -134,9 +159,49 @@ typedef struct {
     hal_float_t hw_offset;  // Parameter: value present when 0V applied
 } hal_adcin_t;
 
-// ----------------------
-// Analog Output (adcout)
-// ----------------------
+/**
+ * @brief Export canonical adcin pins and parameters.
+ */
+int hal_export_adcin(hal_adcin_t *adcin, const char *prefix, int index, int comp_id);
+
+/**
+ * @brief Register periodic read function for adcin.
+ */
+int hal_register_adcin_func(const char *prefix, int index,
+                            void (*read_func)(void *, long),
+                            void *inst, int comp_id);
+
+/**
+ * @brief Canonical analog output (adcout) structure for HAL.
+ * @ingroup hal_analog
+ *
+ * This struct represents a single analog output channel following the
+ * Canonical Device Interface (CDI) for analog signals in LinuxCNC.
+ *
+ * The HAL function registered via `hal_register_adcout_func()` will read the
+ * `value` pin and apply all relevant output parameters before writing to the hardware.
+ * If `enable` is false, the output is forced to 0 regardless of the value.
+ *
+ * ### Pins
+ * - `value` (HAL_IN, float): Desired analog output value (unprocessed)
+ * - `enable` (HAL_IN, bit): If false, hardware output is 0
+ *
+ * ### Parameters
+ * - `offset` (float): Added to the scaled output
+ * - `scale` (float): Multiplier applied to the value before offset
+ * - `high_limit` (float): Optional maximum clamp
+ * - `low_limit` (float): Optional minimum clamp
+ * - `bit_weight` (float): Resolution of one LSB (in volts or mA)
+ * - `hw_offset` (float): Physical output when value = 0 (e.g., 4 mA or 0V)
+ *
+ * The final hardware output is typically computed as:
+ * ```
+ * output = clamp( (scale * value) + offset )
+ * ```
+ * If `enable == false`, the output is set to 0.
+ *
+ * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:analog-out
+ */
 typedef struct {
     hal_float_t *value;      // Pin: input to hardware (after scale/offset)
     hal_bit_t   *enable;     // Pin: if false, output 0
@@ -148,6 +213,17 @@ typedef struct {
     hal_float_t hw_offset;  // Parameter: physical output when 0 written
 } hal_adcout_t;
 
+/**
+ * @brief Export canonical adcout pins and parameters.
+ */
+int hal_export_adcout(hal_adcout_t *adcout, const char *prefix, int index, int comp_id);
+
+/**
+ * @brief Register periodic write function for adcout.
+ */
+int hal_register_adcout_func(const char *prefix, int index,
+                             void (*write_func)(void *, long),
+                             void *inst, int comp_id);
 
 /** @} */ // end of hal_analog
 
