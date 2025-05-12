@@ -18,7 +18,10 @@
  * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:analog-in
  * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:analog-out
  */
-
+#include <hal.h>
+#include <rtapi.h>
+#include <rtapi_string.h>
+#include "linuxcnc-hal-canon.h" 
 
 /**
  * @brief Export HAL pins and parameters for a canonical analog input channel.
