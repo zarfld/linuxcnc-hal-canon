@@ -21,7 +21,7 @@
 #include <hal.h>
 #include <rtapi.h>
 #include <rtapi_string.h>
-#include "linuxcnc-hal-canon.h" 
+#include "hal_canon.h" 
 
 /**
  * @brief Export HAL pins and parameters for a canonical analog input channel.
