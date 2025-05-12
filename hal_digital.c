@@ -18,11 +18,10 @@
  * @copyright
  * MIT / GPLv2 – choose license as appropriate
  */
-
 #include <hal.h>
 #include <rtapi.h>
 #include <rtapi_string.h>
-#include "linuxcnc-hal-canon.h" 
+#include "hal_canon.h"
 
 /**
  * @defgroup hal_digital Canonical Digital I/O Export
