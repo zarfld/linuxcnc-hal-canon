@@ -92,6 +92,37 @@ int hal_register_digout_func(const char *prefix, int index,
 
 /** @} */ // end of hal_digital
 
+/**
+ * @defgroup hal_analog Canonical Analog I/O
+ * @brief Canonical interface helpers for analog input and output devices.
+ *
+ * This module provides HAL-compatible data structures and functions
+ * for exporting canonical analog inputs (`adcin`) and outputs (`adcout`)
+ * as defined by the LinuxCNC Canonical Device Interface (CDI).
+ *
+ * ### Analog Input (`adcin`)
+ * - Provides a scaled floating-point representation of analog hardware input.
+ * - Canonical pins:
+ *   - `value` (HAL_OUT, float): scaled analog input value
+ * - Canonical parameters:
+ *   - `scale`, `offset`, `bit-weight`, `hw-offset` (HAL_RW, float)
+ * - Canonical function:
+ *   - `read` – updates `value` from hardware, applying scale and offset
+ *
+ * ### Analog Output (`adcout`)
+ * - Represents a continuous analog output signal, e.g. for DAC or PWM hardware.
+ * - Canonical pins:
+ *   - `value` (HAL_IN, float): value to write to hardware
+ *   - `enable` (HAL_IN, bit): when false, output is forced to 0
+ * - Canonical parameters:
+ *   - `offset`, `scale`, `high-limit`, `low-limit`, `bit-weight`, `hw-offset` (HAL_RW, float)
+ * - Canonical function:
+ *   - `write` – reads value and parameters, writes scaled output to hardware
+ *
+ * See also: https://linuxcnc.org/docs/html/hal/canonical-devices.html
+ */
+
+
 // ----------------------
 // Analog Input (adcin)
 // ----------------------
@@ -116,6 +147,9 @@ typedef struct {
     hal_float_t bit_weight; // Parameter: LSB value
     hal_float_t hw_offset;  // Parameter: physical output when 0 written
 } hal_adcout_t;
+
+
+/** @} */ // end of hal_analog
 
 // ----------------------
 // Encoder (encoder)
