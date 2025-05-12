@@ -37,6 +37,7 @@ jobs:
           echo "Maintainer: hal-canon <dev@null>" >> "$PKGROOT/DEBIAN/control"
           echo "Description: Canonical Device Interface helper library for LinuxCNC HAL components" >> "$PKGROOT/DEBIAN/control"
           echo "Depends:"                       >> "$PKGROOT/DEBIAN/control"
+          echo ""                              >> "$PKGROOT/DEBIAN/control"
 
           dpkg-deb --build "$PKGROOT"
 
