@@ -18,6 +18,11 @@
  *
  * @see https://linuxcnc.org/docs/html/hal/canonical-devices.html#sec:hal-cdi:encoder
  */
+#include <hal.h>
+#include <rtapi.h>
+#include <rtapi_string.h>
+#include "hal_canon.h"
+
 
 /**
  * @brief Export HAL pins and parameters for a canonical encoder channel.
