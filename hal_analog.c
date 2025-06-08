@@ -215,7 +215,7 @@ int hal_export_adcout(hal_adcout_t *adcout, const char *prefix, int index, int c
 
     return 0;
 }
-hal_float_t hal_adcout_getscaledvalue(hal_adcout_t *adcout);{
+hal_float_t hal_adcout_getscaledvalue(hal_adcout_t *adcout){
 
     if( *adcout->enable == 0 ) {
         // If the output is disabled, return 0
