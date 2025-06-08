@@ -30,6 +30,7 @@
 #undef RTAPI
 #endif
 
+
 /**
  * @brief Export HAL pins and parameters for a canonical analog input channel.
  * @ingroup hal_analog
