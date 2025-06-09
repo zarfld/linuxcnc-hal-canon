@@ -58,6 +58,15 @@ int hal_export_adcin(hal_adcin_t *adcin, const char *prefix, int index, int comp
     int ret;
     char buf[HAL_NAME_LEN];
 
+    if(adcin == NULL ) {
+        rtapi_print_msg(RTAPI_MSG_ERR, "linuxcnc-hal-canon: %s:%s: Invalid parameters (adcin)\n", __FILE__, __FUNCTION__);
+        return -1; // Invalid parameters
+    }
+    else if(prefix == NULL){
+        rtapi_print_msg(RTAPI_MSG_ERR, "linuxcnc-hal-canon: %s:%s: Invalid parameters (prefix)\n", __FILE__, __FUNCTION__);
+        return -1; // Invalid parameters
+    }
+
     // value (output)
     rtapi_snprintf(buf, sizeof(buf), "%s.adcin.%d.value", prefix, index);
     ret = hal_pin_float_newf(HAL_IN, &(adcin->value), comp_id, buf);
