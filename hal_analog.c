@@ -185,12 +185,12 @@ int hal_export_adcout(hal_adcout_t *adcout, const char *prefix, int index, int c
 
     // value
     rtapi_snprintf(buf, sizeof(buf), "%s.adcout.%d.value", prefix, index);
-    ret = hal_pin_float_newf(HAL_IN, &adcout->value, comp_id, buf);
+    ret = hal_pin_float_newf(HAL_OUT, &adcout->value, comp_id, buf);
     if (ret != 0) return ret;
 
     // enable
     rtapi_snprintf(buf, sizeof(buf), "%s.adcout.%d.enable", prefix, index);
-    ret = hal_pin_bit_newf(HAL_IN, &adcout->enable, comp_id, buf);
+    ret = hal_pin_bit_newf(HAL_OUT, &adcout->enable, comp_id, buf);
     if (ret != 0) return ret;
 
     // offset

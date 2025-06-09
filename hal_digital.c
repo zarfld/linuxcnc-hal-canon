@@ -75,7 +75,7 @@ int hal_export_digin(hal_digin_t *digin, const char *prefix, int index, int comp
 		
     // Export 'in-not' pin
     rtapi_snprintf(buf, sizeof(buf), "%s.digin.%d.in-not", prefix, index);
-    ret = hal_pin_bit_newf(HAL_OUT, &(digin->in_not), comp_id, buf);
+    ret = hal_pin_bit_newf(HAL_IN, &(digin->in_not), comp_id, buf);
     if (ret != 0) {
         rtapi_print_msg(RTAPI_MSG_ERR, "linuxcnc-hal-canon: %s:%s: %s.digin.%d.in-not failed\n", __FILE__, __FUNCTION__, prefix, index);
         return ret;
